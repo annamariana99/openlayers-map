@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Map</title>
+
+  <!-- OpenLayers CSS -->
+  <link href="https://cdn.skypack.dev/ol/ol.css" rel="stylesheet">
+
+  <!-- Main JS and Popup JS -->
+  <script type="module" src="/main.js"></script>
+  <script type="module" src="/popup.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #702a38;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #container {
+      display: flex;
+      width: 100%;
+      max-width: 1200px;
+      height: 80vh;
+      gap: 20px;
+    }
+
+    #map {
+      flex: 2;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #locations {
+      flex: 1;
+      background-color: #812e51;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+    }
+
+    h3 {
+      font-size: 1.5em;
+      color: #fff;
+    }
+
+    #location-list {
+      margin-top: 15px;
+      list-style: none;
+      padding: 0;
+    }
+
+    #location-list li {
+      margin-bottom: 15px;
+    }
+
+    .location-card {
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 10px;
+      color: #333;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .location-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .location-coordinates {
+      font-size: 0.9em;
+      margin-bottom: 8px;
+      font-style: italic;
+      color: #555;
+    }
+
+    .location-name {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    #location-list li:hover {
+      background-color: #e9f7e9;
+    }
+
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(149, 24, 24, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .popup.hidden {
+      display: none;
+      opacity: 0;
+    }
+
+    .popup-content {
+      background: #a80606;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 300px;
+      max-width: 80%;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    textarea {
+      width: 100%;
+      height: 70px;
+      padding: 10px;
+      border: 1px solid #7c0808;
+      border-radius: 4px;
+      resize: none;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 10px 5px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    #save-location {
+      background: #28a745;
+      color: rgb(205, 25, 25);
+    }
+
+    #cancel-location {
+      background: #dc3545;
+      color: rgb(175, 15, 15);
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      #container {
+        flex-direction: column;
+        height: auto;
+      }
+
+      #map {
+        height: 50vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="map"></div>
+    <div id="locations">
+      <h3>Saved Locations:</h3>
+      <ul id="location-list"></ul>
+    </div>
+  </div>
+
+  <div id="input-popup" class="popup hidden">
+    <div class="popup-content">
+      <h3>Save Location</h3>
+      <p id="popup-coordinates"></p>
+      <textarea id="location-description" placeholder="Enter description here..."></textarea>
+      <button id="save-location">Save</button>
+      <button id="cancel-location">Cancel</button>
+    </div>
+  </div>
+</body>
+</html>
